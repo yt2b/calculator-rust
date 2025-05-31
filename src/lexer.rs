@@ -69,7 +69,7 @@ fn is_whitespace(c: Option<&char>) -> bool {
 
 fn is_digit(c: Option<&char>) -> bool {
     match c {
-        Some(c) => c.is_digit(10),
+        Some(c) => c.is_ascii_digit(),
         _ => false,
     }
 }
