@@ -12,7 +12,7 @@ fn main() {
         let mut input = String::new();
         stdin().read_line(&mut input).expect("Failed to read line");
         input = input.trim().to_string();
-        if input == "" {
+        if input.is_empty() {
             break;
         }
         let lexer = Lexer::new(input.chars());
