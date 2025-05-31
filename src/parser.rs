@@ -18,7 +18,15 @@ where
         }
     }
 
-    pub fn parse_expression(&mut self) -> Result<f64, String> {
+    pub fn parse(&mut self) -> Result<f64, String> {
+        let value = self.parse_expression()?;
+        match self.tokens.next() {
+            Some(token) => Err(format!("Invalid token {:?}", token)),
+            None => Ok(value),
+        }
+    }
+
+    fn parse_expression(&mut self) -> Result<f64, String> {
         let mut left_value = self.parse_term()?;
         while let Some(Token::Plus | Token::Minus) = self.tokens.peek() {
             let token = self.tokens.next();
@@ -72,7 +80,7 @@ mod tests {
     fn parse(exp: &str) -> Result<f64, String> {
         let lexer = Lexer::new(exp.chars());
         let mut parser = Parser::new(lexer);
-        parser.parse_expression()
+        parser.parse()
     }
 
     #[test]
@@ -80,6 +88,7 @@ mod tests {
         assert_eq!(parse("1"), Ok(1.0));
         assert_eq!(parse("2.1 + 6 / 2"), Ok(5.1));
         assert_eq!(parse("(6.4 + 3.6) * (10 - 2)"), Ok(80.0));
+        assert_eq!(parse("1 2.0"), Err("Invalid token Number(2.0)".to_string()));
         assert_eq!(parse("3 + "), Err("Invalid syntax".to_string()));
         assert_eq!(parse("4- / "), Err("Invalid token Slash".to_string()));
         assert_eq!(parse("(12 + 345"), Err("RParen not found".to_string()));

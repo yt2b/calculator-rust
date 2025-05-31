@@ -17,7 +17,7 @@ fn main() {
         }
         let lexer = Lexer::new(input.chars());
         let mut parser = Parser::new(lexer);
-        match parser.parse_expression() {
+        match parser.parse() {
             Ok(value) => println!("{value}"),
             Err(message) => println!("ERROR: {message}"),
         }
